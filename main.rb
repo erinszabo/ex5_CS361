@@ -1,6 +1,9 @@
 # Exercise 6
+require "test/unit"
 
 class LaunchDiscussionWorkflow
+
+  attr_reader :participants, :successful
 
   def initialize(discussion, host, participants_email_string)
     @discussion = discussion
@@ -10,8 +13,9 @@ class LaunchDiscussionWorkflow
   end
 
   # Expects @participants array to be filled with User objects
-  def run
-    return unless valid?
+  def run # maybe rename?? launch_discussion?
+    return unless valid? 
+    # would the system prefer return nothing if invalid? or an error? or some other effect?
     run_callbacks(:create) do
       ActiveRecord::Base.transaction do
         discussion.save!
@@ -28,10 +32,25 @@ class LaunchDiscussionWorkflow
     end
   end
 
-  # ...
+end
+
+class TestLaunchDiscussionWorkflow < Test::Unit::TestCase 
+  def test_run
+    # check .successful == true
+  end
+  def test_generate_participant_users_from_email_string 
+    # check .participants arr is filled with User objs
+  end
+
+  def run_tests 
+   puts test_run
+   puts test_generate_participant_users_from_email_string
+  end
 
 end
 
+# run tests
+# if tests pass, continue 
 
 discussion = Discussion.new(title: "fake", ...)
 host = User.find(42)
