@@ -12,7 +12,6 @@ class LaunchDiscussionWorkflow
     @participants = []
   end
 
-  # Expects @participants array to be filled with User objects
   def launch_discussion 
     return unless valid? 
     # would the system prefer return nothing if invalid? or an error? or something else?
@@ -36,19 +35,19 @@ end
 
 class TestLaunchDiscussionWorkflow < Test::Unit::TestCase 
 
-  def test_generate_participant_users_from_email_string 
+  def test_setup
     @discussion = Discussion.new(title: "fake", ...)
     @host = User.find(42)
     @participants = "fake1@example.com\nfake2@example.com\nfake3@example.com"
     @workflow = LaunchDiscussionWorkflow.new(discussion, host, participants)
     @workflow.generate_participant_users_from_email_string
+  end
 
+  def test_generate_participant_users_from_email_string 
     @workflow.participants do |participant|
       return false unless participant.is_a?(User) 
     end
-
-    return true # not single entry single exit. maybe improve if time allows
-
+    return true 
   end
 
   def test_launch_discussion
@@ -56,11 +55,13 @@ class TestLaunchDiscussionWorkflow < Test::Unit::TestCase
   end
 
   def run_tests 
-   puts test_launch_discussion
-   puts test_generate_participant_users_from_email_string
+    test_setup
+    puts test_launch_discussion
+    puts test_generate_participant_users_from_email_string
   end
 
 end
 
 
 # moved tests into test class
+TestLaunchDiscussionWorkflow.run_tests
